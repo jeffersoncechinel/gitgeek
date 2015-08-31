@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 09:07:26
+# @Last Modified time: 2015-08-31 09:24:11
 #
 # ------------------------------------------------------------------
 
@@ -52,19 +52,21 @@ fi
 commit()
 {
 	read -p "Type the commit message:" msg
-    echo "Commiting: $msg"
     echo -n "Deleting caching files if any... "
     rm -rf data/log/* data/cache/*.php app/log*
     echo "OK"
-    echo -n "Preparing git..."
+    echo "Adding all files.."
 	git add .
-	echo "OK"
-	echo "Checking git status"
-	git status
-	echo "Git commit? Press enter to continue or ctrl+c to cancel operation."
+	echo "Checking git status.."
+	git status -s
+	echo "Commiting with message: $msg"
 	read -p "Perform git commit? (y/n):" yn
+	if [ "$yn" != "y" ]; then
+		return
+	fi
 	git commit -a -m "$msg"
-	echo "Pushing to all remotes..."
+
+	echo "Pushing to remotes..."
 	IFS=$'\n'
 	arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
 	unset IFS
@@ -72,8 +74,13 @@ commit()
 	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 	for i in "${arr[@]}"
 	do
-		dst="$i | cut -d ' ' -f1"
-		echo "git push $dst $BRANCH"
+		DST=`echo $i | cut -d " " -f1`
+
+		read -p "Push to $DST? (y/n):" yn
+		if [ "$yn" == "y" ]; then
+			 git push $i $BRANCH
+		fi
+
 	done
 	#git push origin master
 }

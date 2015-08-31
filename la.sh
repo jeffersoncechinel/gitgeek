@@ -4,5 +4,6 @@ unset IFS
 
 for i in "${arr[@]}"
 do
-	echo $i | cut -d " " -f1
+	DST=`echo $i | cut -d " " -f1`
+	echo $DST
 done

@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-30 23:33:45
+# @Last Modified time: 2015-08-30 23:59:34
 #
 # ------------------------------------------------------------------
 
@@ -132,7 +132,7 @@ merge()
 	echo "Checking out $bname: "
 	git checkout $bname
 	echo "Merging $BRANCH into $bname"
-	git merge --no--ff $BRANCH
+	git merge $BRANCH
 	echo "git push origin $bname(cmd only)"
 	echo "git push dropbox $bname(cmd only)"
 }
@@ -219,26 +219,3 @@ do
         *) echo invalid option;;
     esac
 done
-
-
-
-
-# if [ -z "$1" ]; then
-# 	echo "./$0 <commit message>"
-# else
-# echo -n "Deleting caching files... "
-# rm -rf data/log/* data/cache/*.php
-# echo "OK"
-# echo -n "Preparing git..."
-# git add .
-# echo "OK"
-# echo "Checking git status"
-# git status
-# echo "Git commit? Press enter to continue or ctrl+c to cancel operation."
-# read
-# git config user.name "Jefferson Cechinel"
-# git config user.email "jefferson@homeyou.com"
-# git commit -a -m "$1"
-# echo "Pushing... "
-# git push origin master
-# fi

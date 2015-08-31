@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 09:26:08
+# @Last Modified time: 2015-08-31 09:32:58
 #
 # ------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ commit()
     echo "Adding all files.."
 	git add .
 	echo "Checking git status.."
-	git status -s
+	git status
 	echo "Commiting with message: $msg"
 	read -p "Perform git commit? (y/n):" yn
 	if [ "$yn" != "y" ]; then
@@ -82,7 +82,6 @@ commit()
 		fi
 
 	done
-	#git push origin master
 }
 
 autocommit()
@@ -91,12 +90,17 @@ autocommit()
     echo -n "Deleting caching files if any... "
     rm -rf data/log/* data/cache/*.php
     echo "OK"
-    echo -n "Adding files.."
+    echo -n "Adding all files.."
 	git add .
 	echo "OK"
 	git commit -a -m "$msg"
 	echo "Pushing to all remotes..."
-	#git push origin master
+	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
+	for i in "${arr[@]}"
+	do
+		DST=`echo $i | cut -d " " -f1`
+		git push $DST $BRANCH
+	done
 }
 
 deploy_production()

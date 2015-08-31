@@ -4,7 +4,11 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
+<<<<<<< HEAD
 # @Last Modified time: 2015-08-31 20:17:02
+=======
+# @Last Modified time: 2015-08-31 20:43:46
+>>>>>>> develop
 #
 # ------------------------------------------------------------------
 
@@ -190,20 +194,39 @@ merge_destination_branch()
 		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
-	echo -e "You are about to merge the current branch: $COL_GREEN $BRANCH $COL_RESET"
-	echo "You can merge this branch into one of the branches below:"
-	git branch | grep -v $BRANCH | grep -v "grep"
-	read -p "Type the branch name you want to merge it into:" bname
-	if [ "$bname" == "$BRANCH" ];then
-		echo "Source and destination branches are the same."
-		echo "Aborting..."
+	echo -e "You are about to merge the contents of ($COL_GREEN $BRANCH $COL_RESET) into another branch"
+	IFS=$'\n'
+	arr=($(git branch | grep -v "*" | grep -v "grep" | cut -d '*' -f2 | xargs))
+	unset IFS
+	PS3=`echo -e $COL_YELLOW"Choose a destination branch ($COL_MAGENTA merge $COL_RESET): "$COL_RESET`
+	counter=0
+	for i in "${arr[@]}"
+	do
+		DST=`echo $i`
+		options2[$counter]=$DST
+		counter=$((counter+1))
+	done
+	options2[$counter]="Back to main menu"
+
+	select opt2 in "${options2[@]}"
+	do
+		if [ "$opt2" == "Back to main menu" ]; then
+			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+			return
+		fi
+		echo -e "$COL_MAGENTA git merge $opt2 $COL_RESET"
+		#echo git merge $opt2
+		echo "Checking out $opt2: "
+		echo -e "$COL_MAGENTA git checkout $opt2 $COL_RESET"
+		git checkout $opt2
+		echo "Merging $BRANCH into $opt2"
+		echo -e "$COL_MAGENTA git merge $BRANCH $COL_RESET"
+		git merge $BRANCH
+		echo -e "$COL_MAGENTA git checkout $BRANCH $COL_RESET"
+		git checkout $BRANCH
 		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
-	fi
-	if [ "$bname" == "" ];then
-		echo "Aborting..."
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
-		return
+<<<<<<< HEAD
 	fi
 
 	echo "Checking out $bname: "
@@ -214,6 +237,9 @@ merge_destination_branch()
 	git merge $BRANCH
 	git checkout $BRANCH
 	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+=======
+	done
+>>>>>>> develop
 }
 
 delete_branch()

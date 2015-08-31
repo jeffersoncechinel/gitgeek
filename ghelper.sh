@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 16:38:59
+# @Last Modified time: 2015-08-31 18:52:22
 #
 # ------------------------------------------------------------------
 
@@ -280,12 +280,55 @@ push()
 	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
+pull()
+{
+	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
+	IFS=$'\n'
+	arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
+	unset IFS
+	PS3=`echo -e $COL_BLUE"Choose the remote repository ($COL_MAGENTA pull $COL_RESET): "$COL_RESET`
+	counter=0
+	for i in "${arr[@]}"
+	do
+		DST=`echo $i | cut -d " " -f1`
+		echo $DST
+		options2[$counter]=$DST
+		counter=$((counter+1))
+	done
+	options2[$counter]="Back to main menu"
+
+	select opt2 in "${options2[@]}"
+	do
+		if [ "$opt2" == "Back to main menu" ]; then
+			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+			return
+		fi
+		echo -e "$COL_MAGENTA git pull $opt2 $BRANCH $COL_RESET"
+		git push $opt2 $BRANCH
+	done
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+}
+
 status()
 {
 echo -e "$COL_MAGENTA git status $COL_RESET"
 git status
 echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
+
+log()
+{
+	echo "Showing last 10 commits.."
+	echo -e "$COL_MAGENTA  git log -n 15  --pretty=oneline $COL_RESET"
+	git log -n 10  --pretty=oneline
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+}
+
+about()
+{
+	GIT Helper
+}
+
 
 ps3()
 {
@@ -295,7 +338,7 @@ ps3()
 
 ps3
 
-options=("Show Status" "Commit and Push" "Auto Commit and Push" "Push" "List Branches" "Checkout Branch" "Merge Branch" "Delete Branch" "Merge and Deploy" "Show Remotes" "Log" "About" "Quit")
+options=("Show Status" "Commit and Push" "Auto Commit and Push" "Push" "Pull" "List Branches" "Checkout Branch" "Merge Branch" "Delete Branch" "Merge and Deploy" "Show Remotes" "Log" "About" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -313,6 +356,10 @@ do
             ;;
         "Push")
 			push
+			ps3
+			;;
+		"Pull")
+			pull
 			ps3
 			;;
         "List Branches")
@@ -337,6 +384,10 @@ do
             ;;
         "Show Remotes")
 			git remote -v
+			ps3
+            ;;
+        "Log")
+			log
 			ps3
             ;;
         "About")

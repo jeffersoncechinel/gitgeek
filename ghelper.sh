@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 09:38:02
+# @Last Modified time: 2015-08-31 09:38:56
 #
 # ------------------------------------------------------------------
 
@@ -98,12 +98,13 @@ autocommit()
 	echo "Commiting with message: $msg"
 	git commit -a -m "$msg"
 	echo "Pushing to all remotes..."
+	IFS=$'\n'
+	arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
+	unset IFS
 
 	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
-	echo "pa"
 	for i in "${arr[@]}"
 	do
-		echo "Aqui estamos"
 		DST=`echo $i | cut -d " " -f1`
 		git push $DST $BRANCH
 	done

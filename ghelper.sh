@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 09:03:38
+# @Last Modified time: 2015-08-31 09:06:38
 #
 # ------------------------------------------------------------------
 
@@ -69,10 +69,11 @@ commit()
 	arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
 	unset IFS
 
+	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 	for i in "${arr[@]}"
 	do
-		dst="$i | cut -d " " -f1"
-		git push $dst
+		dst="$i | cut -d ' ' -f1"
+		git push $dst $BRANCH
 	done
 	#git push origin master
 }

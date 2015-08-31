@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 15:52:41
+# @Last Modified time: 2015-08-31 16:32:30
 #
 # ------------------------------------------------------------------
 
@@ -57,14 +57,18 @@ commit()
     rm -rf data/log/* data/cache/*.php app/log*
     echo "OK"
     echo "Adding all files.."
+    echo -e "$COL_MAGENTA git add . $COL_RESET"
 	git add .
 	echo "Checking git status.."
+	echo -e "$COL_MAGENTA git status $COL_RESET"
 	git status
 	echo "Commiting with message: $msg"
 	read -p "Perform git commit? (y/n):" yn
 	if [ "$yn" != "y" ]; then
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
+	echo -e "$COL_MAGENTA git commit -a -m "$msg" $COL_RESET"
 	git commit -a -m "$msg"
 
 	echo "Pushing to remotes..."
@@ -79,10 +83,11 @@ commit()
 
 		read -p "Push to $DST? (y/n):" yn
 		if [ "$yn" == "y" ]; then
-			 git push $DST $BRANCH
+			echo -e "$COL_MAGENTA git push $DST $BRANCH $COL_RESET"
+			git push $DST $BRANCH
 		fi
-
 	done
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
 autocommit()
@@ -112,6 +117,7 @@ autocommit()
 		echo -e "$COL_MAGENTA git push $DST $BRANCH $COL_RESET"
 		git push $DST $BRANCH
 	done
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
 merge_deploy()
@@ -127,11 +133,14 @@ merge_deploy()
 	read -p "Do you really want to merge?" yn
 	if [ "$yn" == "n" ];then
 		echo "Aborting..."
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
 	echo "Checking out master.."
+	echo -e "$COL_MAGENTA git checkout master $COL_RESET"
 	git checkout master
 	echo "Merging $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET."
+	echo -e "$COL_MAGENTA git merge $BRANCH $COL_RESET"
 	git merge $BRANCH
 	echo "Pushing to remotes..."
 	IFS=$'\n'
@@ -150,18 +159,24 @@ merge_deploy()
 		fi
 
 	done
+	echo -e "$COL_MAGENTA git checkout $BRANCH $COL_RESET"
 	git checkout $BRANCH
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
 checkout()
 {
+	echo -e "$COL_MAGENTA git branch $BRANCH $COL_RESET"
 	git branch
 	read -p "Branch name to checkout: " bcheckout
 	if [ -z "$bcheckout" ]; then
 		echo "Aborting..."
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
+	echo -e "$COL_MAGENTA git checkout $bcheckout $COL_RESET"
 	git checkout $bcheckout
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
 merge()
@@ -176,6 +191,7 @@ merge()
 		echo "It is not good practice to merge 'master' into another branch."
 		echo "Please checkout to another branch and try again."
 		echo "Aborting..."
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
 	echo -e "You are about to merge the current branch: $COL_GREEN $BRANCH $COL_RESET"
@@ -185,19 +201,22 @@ merge()
 	if [ "$bname" == "$BRANCH" ];then
 		echo "Source and destination branches are the same."
 		echo "Aborting..."
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
 	if [ "$bname" == "" ];then
 		echo "Aborting..."
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
 
 	echo "Checking out $bname: "
+	echo -e "$COL_MAGENTA git checkout $bname $COL_RESET"
 	git checkout $bname
 	echo "Merging $BRANCH into $bname"
+	echo -e "$COL_MAGENTA git merge $BRANCH $COL_RESET"
 	git merge $BRANCH
-	echo "git push origin $bname(cmd only)"
-	echo "git push dropbox $bname(cmd only)"
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
 delete_branch()
@@ -214,26 +233,31 @@ delete_branch()
 	if [ "$bname" == "master" ];then
 		echo "You cannot delete the branch $COL_GREEN($bname)$COL_REST using this tool."
 		echo "Aborting..."
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
 	if [ "$bname" == "develop" ];then
 		echo "You cannot delete the branch ($bname) using this tool."
 		echo "Aborting..."
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
 	if [ "$bname" == "" ];then
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
 	fi
+	echo -e "$COL_MAGENTA git branch -d $bname $COL_RESET"
 	git branch -d $bname
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
 push()
 {
-	echo "entrei.."
+	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 	IFS=$'\n'
 	arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
 	unset IFS
-	PS3=`echo -e $COL_BLUE"Choose the remote repository: "$COL_RESET""`
+	PS3=`echo -e $COL_BLUE"Choose the remote repository ($COL_MAGENTA push $COL_RESET): "$COL_RESET`
 	counter=0
 	for i in "${arr[@]}"
 	do
@@ -247,13 +271,21 @@ push()
 	select opt2 in "${options2[@]}"
 	do
 		if [ "$opt2" == "Back to main menu" ]; then
-			echo -e $COL_CYAN"Leave in blank and PRESS ENTER to refresh the command list."
+			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 			return
 		fi
+		echo -e "$COL_MAGENTA git push $opt2 $BRANCH $COL_RESET"
+		git push $opt2 $BRANCH
 	done
-	echo -e $COL_CYAN"Leave in blank and PRESS ENTER to refresh the command list."
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
+status()
+{
+echo -e "$COL_MAGENTA git status $COL_RESET"
+git status
+echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+}
 
 ps3()
 {
@@ -268,7 +300,7 @@ select opt in "${options[@]}"
 do
     case $opt in
     	"Show Status")
-    	    git status
+    	    status
     	    ps3
     	    ;;
         "Commit and Push")

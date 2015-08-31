@@ -1,3 +1,4 @@
+
 IFS=$'\n'
 arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
 unset IFS

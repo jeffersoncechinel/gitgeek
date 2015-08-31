@@ -5,7 +5,7 @@
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
 <<<<<<< HEAD
-# @Last Modified time: 2015-08-31 20:17:02
+# @Last Modified time: 2015-08-31 20:52:39
 =======
 # @Last Modified time: 2015-08-31 20:43:46
 >>>>>>> develop
@@ -189,7 +189,7 @@ merge_destination_branch()
 
 	if [ "$BRANCH" == "master" ];then
 		echo "It is not good practice to merge 'master' into another branch."
-		echo "Please checkout to another branch and try again."
+		echo "Use: 'Merge Working Branch' instead"
 		echo "Aborting..."
 		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return

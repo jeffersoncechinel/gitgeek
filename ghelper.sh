@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 09:32:58
+# @Last Modified time: 2015-08-31 09:35:24
 #
 # ------------------------------------------------------------------
 
@@ -93,6 +93,9 @@ autocommit()
     echo -n "Adding all files.."
 	git add .
 	echo "OK"
+	echo "Checking git status.."
+	git status
+	echo "Commiting with message: $msg"
 	git commit -a -m "$msg"
 	echo "Pushing to all remotes..."
 	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`

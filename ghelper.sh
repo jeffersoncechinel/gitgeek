@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 09:35:24
+# @Last Modified time: 2015-08-31 09:37:07
 #
 # ------------------------------------------------------------------
 
@@ -101,6 +101,7 @@ autocommit()
 	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 	for i in "${arr[@]}"
 	do
+		echo "Aqui estamos"
 		DST=`echo $i | cut -d " " -f1`
 		git push $DST $BRANCH
 	done

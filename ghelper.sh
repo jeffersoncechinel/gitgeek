@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 20:36:28
+# @Last Modified time: 2015-08-31 20:43:46
 #
 # ------------------------------------------------------------------
 
@@ -194,7 +194,7 @@ merge_destination_branch()
 	IFS=$'\n'
 	arr=($(git branch | grep -v "*" | grep -v "grep" | cut -d '*' -f2 | xargs))
 	unset IFS
-	PS3=`echo -e $COL_BLUE"Choose a destination branch ($COL_MAGENTA merge $COL_RESET): "$COL_RESET`
+	PS3=`echo -e $COL_YELLOW"Choose a destination branch ($COL_MAGENTA merge $COL_RESET): "$COL_RESET`
 	counter=0
 	for i in "${arr[@]}"
 	do
@@ -212,17 +212,17 @@ merge_destination_branch()
 		fi
 		echo -e "$COL_MAGENTA git merge $opt2 $COL_RESET"
 		#echo git merge $opt2
+		echo "Checking out $opt2: "
+		echo -e "$COL_MAGENTA git checkout $opt2 $COL_RESET"
+		git checkout $opt2
+		echo "Merging $BRANCH into $opt2"
+		echo -e "$COL_MAGENTA git merge $BRANCH $COL_RESET"
+		git merge $BRANCH
+		echo -e "$COL_MAGENTA git checkout $BRANCH $COL_RESET"
+		git checkout $BRANCH
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+		return
 	done
-
-	echo "Checking out $bname: "
-	echo -e "$COL_MAGENTA git checkout $opt2 $COL_RESET"
-	git checkout $opt2
-	echo "Merging $BRANCH into $opt2"
-	echo -e "$COL_MAGENTA git merge $BRANCH $COL_RESET"
-	git merge $BRANCH
-	echo -e "$COL_MAGENTA git checkout $BRANCH $COL_RESET"
-	git checkout $BRANCH
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
 delete_branch()

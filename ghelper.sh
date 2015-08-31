@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 09:38:56
+# @Last Modified time: 2015-08-31 10:02:27
 #
 # ------------------------------------------------------------------
 
@@ -91,11 +91,14 @@ autocommit()
     rm -rf data/log/* data/cache/*.php
     echo "OK"
     echo -n "Adding all files.."
+   	echo -e "$COL_MAGENTA git add . $COL_RESET"
 	git add .
 	echo "OK"
 	echo "Checking git status.."
+	echo -e "$COL_MAGENTA git status $COL_RESET"
 	git status
 	echo "Commiting with message: $msg"
+	echo -e "$COL_MAGENTA git commit -a -m $msg $COL_RESET"
 	git commit -a -m "$msg"
 	echo "Pushing to all remotes..."
 	IFS=$'\n'
@@ -106,28 +109,58 @@ autocommit()
 	for i in "${arr[@]}"
 	do
 		DST=`echo $i | cut -d " " -f1`
+		echo -e "$COL_MAGENTA git push $DST $BRANCH $COL_RESET"
 		git push $DST $BRANCH
 	done
 }
 
-deploy_production()
+merge_deploy()
 {
-	echo "You´re about to merge the develop changes into master."
-	read -p "Do you really want to deploy to production(master)?" yn
+	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
+
+	if [ "$BRANCH" == "master" ];then
+		echo -e "You cannot merge current branch $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET"
+		return
+	fi
+
+	echo -e "You are about to merge the current branch $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET."
+	read -p "Do you really want to merge?" yn
 	if [ "$yn" == "n" ];then
+		echo "Aborting..."
 		return
 	fi
 	echo "Checking out master.."
 	git checkout master
-	echo "Merging develop into master branch..."
-	git merge develop
-	echo "git push origin master(cmd only)"
+	echo "Merging $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET."
+	git merge $BRANCH
+	echo "Pushing to remotes..."
+	IFS=$'\n'
+	arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
+	unset IFS
+
+	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
+	for i in "${arr[@]}"
+	do
+		DST=`echo $i | cut -d " " -f1`
+
+		read -p "Push to $DST? (y/n):" yn
+		if [ "$yn" == "y" ]; then
+			echo -e "$COL_MAGENTA git push $DST $BRANCH $COL_RESET"
+			git push $DST $BRANCH
+		fi
+
+	done
+	git checkout $BRANCH
 }
 
 checkout()
 {
 	git branch
 	read -p "Branch name to checkout: " bcheckout
+	if [ -z "$bcheckout" ]; then
+		echo "Aborting..."
+		return
+	fi
 	git checkout $bcheckout
 }
 
@@ -202,7 +235,7 @@ ps3()
 
 ps3
 
-options=("Commit and Push" "Auto Commit and Push" "Deploy Production" "List Branches" "Checkout Branch" "Merge Branch" "Delete Branch" "Show Remotes" "About" "Quit")
+options=("Commit and Push" "Auto Commit and Push" "Merge and Deploy" "List Branches" "Checkout Branch" "Merge Branch" "Delete Branch" "Show Remotes" "About" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -214,8 +247,8 @@ do
             autocommit
             ps3
             ;;
-        "Deploy Production")
-            deploy_production
+        "Merge and Deploy")
+            merge_deploy
             ps3
             ;;
         "List Branches")

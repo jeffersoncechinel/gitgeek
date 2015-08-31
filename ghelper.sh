@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 09:24:11
+# @Last Modified time: 2015-08-31 09:26:08
 #
 # ------------------------------------------------------------------
 
@@ -78,7 +78,7 @@ commit()
 
 		read -p "Push to $DST? (y/n):" yn
 		if [ "$yn" == "y" ]; then
-			 git push $i $BRANCH
+			 git push $DST $BRANCH
 		fi
 
 	done

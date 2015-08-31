@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 09:06:38
+# @Last Modified time: 2015-08-31 09:07:26
 #
 # ------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ commit()
 	for i in "${arr[@]}"
 	do
 		dst="$i | cut -d ' ' -f1"
-		git push $dst $BRANCH
+		echo "git push $dst $BRANCH"
 	done
 	#git push origin master
 }

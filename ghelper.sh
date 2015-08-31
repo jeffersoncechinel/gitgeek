@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 10:04:39
+# @Last Modified time: 2015-08-31 15:52:41
 #
 # ------------------------------------------------------------------
 
@@ -18,6 +18,7 @@ COL_BLUE=$ESC_SEQ"34;01m"
 COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 
+clear
 echo ""
 echo  -e $COL_YELLOW"GIT Console Helper - Verson 0.1 (Jefferson Cechinel)"$COL_RESET
 echo ""
@@ -226,6 +227,34 @@ delete_branch()
 	git branch -d $bname
 }
 
+push()
+{
+	echo "entrei.."
+	IFS=$'\n'
+	arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
+	unset IFS
+	PS3=`echo -e $COL_BLUE"Choose the remote repository: "$COL_RESET""`
+	counter=0
+	for i in "${arr[@]}"
+	do
+		DST=`echo $i | cut -d " " -f1`
+		echo $DST
+		options2[$counter]=$DST
+		counter=$((counter+1))
+	done
+	options2[$counter]="Back to main menu"
+
+	select opt2 in "${options2[@]}"
+	do
+		if [ "$opt2" == "Back to main menu" ]; then
+			echo -e $COL_CYAN"Leave in blank and PRESS ENTER to refresh the command list."
+			return
+		fi
+	done
+	echo -e $COL_CYAN"Leave in blank and PRESS ENTER to refresh the command list."
+}
+
+
 ps3()
 {
 	CUR_BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
@@ -234,10 +263,14 @@ ps3()
 
 ps3
 
-options=("Commit and Push" "Auto Commit and Push" "Merge and Deploy" "List Branches" "Checkout Branch" "Merge Branch" "Delete Branch" "Show Remotes" "About" "Quit")
+options=("Show Status" "Commit and Push" "Auto Commit and Push" "Push" "List Branches" "Checkout Branch" "Merge Branch" "Delete Branch" "Merge and Deploy" "Show Remotes" "Log" "About" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
+    	"Show Status")
+    	    git status
+    	    ps3
+    	    ;;
         "Commit and Push")
             commit
             ps3
@@ -246,10 +279,10 @@ do
             autocommit
             ps3
             ;;
-        "Merge and Deploy")
-            merge_deploy
-            ps3
-            ;;
+        "Push")
+			push
+			ps3
+			;;
         "List Branches")
 			git branch
 			ps3
@@ -265,6 +298,10 @@ do
         "Delete Branch")
 			delete_branch
 			ps3
+            ;;
+        "Merge and Deploy")
+            merge_deploy
+            ps3
             ;;
         "Show Remotes")
 			git remote -v

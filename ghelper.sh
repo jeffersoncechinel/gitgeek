@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-30 23:59:34
+# @Last Modified time: 2015-08-31 00:12:03
 #
 # ------------------------------------------------------------------
 
@@ -107,15 +107,17 @@ merge()
 {
 	ESC_SEQ="\x1b["
 	COL_RESET=$ESC_SEQ"39;49;00m"
+	COL_RED=$ESC_SEQ"31;01m"
 	COL_GREEN=$ESC_SEQ"32;01m"
 	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
+
 	if [ "$BRANCH" == "master" ];then
 		echo "It is not good practice to merge 'master' into another branch."
 		echo "Please checkout to another branch and try again."
 		echo "Aborting..."
 		return
 	fi
-	echo "You are about to merge the current branch:($COL_GREEN $BRANCH $COL_RESET)"
+	echo -e "You are about to merge the current branch: $COL_GREEN $BRANCH $COL_RESET"
 	echo "You can merge this branch into one of the branches below:"
 	git branch | grep -v $BRANCH | grep -v "grep"
 	read -p "Type the branch name you want to merge it into:" bname
@@ -176,7 +178,7 @@ options=("Commit and Push" "Auto Commit and Push" "Deploy Production" "List Bran
 select opt in "${options[@]}"
 do
     case $opt in
-        "Commit and Push (prompted)")
+        "Commit and Push")
             commit
             ps3
             ;;
@@ -211,7 +213,7 @@ do
         "About")
 			echo "About me"
 			ps3
-            ;;    
+            ;;
         "Quit")
 			#break
 			exit

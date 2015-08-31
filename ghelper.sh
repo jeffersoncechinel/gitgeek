@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 10:02:27
+# @Last Modified time: 2015-08-31 10:04:39
 #
 # ------------------------------------------------------------------
 
@@ -90,10 +90,9 @@ autocommit()
     echo -n "Deleting caching files if any... "
     rm -rf data/log/* data/cache/*.php
     echo "OK"
-    echo -n "Adding all files.."
+    echo "Adding all files.."
    	echo -e "$COL_MAGENTA git add . $COL_RESET"
 	git add .
-	echo "OK"
 	echo "Checking git status.."
 	echo -e "$COL_MAGENTA git status $COL_RESET"
 	git status

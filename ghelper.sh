@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 18:52:22
+# @Last Modified time: 2015-08-31 20:17:02
 #
 # ------------------------------------------------------------------
 
@@ -179,12 +179,8 @@ checkout()
 	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
-merge()
+merge_destination_branch()
 {
-	ESC_SEQ="\x1b["
-	COL_RESET=$ESC_SEQ"39;49;00m"
-	COL_RED=$ESC_SEQ"31;01m"
-	COL_GREEN=$ESC_SEQ"32;01m"
 	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 
 	if [ "$BRANCH" == "master" ];then
@@ -216,6 +212,7 @@ merge()
 	echo "Merging $BRANCH into $bname"
 	echo -e "$COL_MAGENTA git merge $BRANCH $COL_RESET"
 	git merge $BRANCH
+	git checkout $BRANCH
 	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 
@@ -262,7 +259,6 @@ push()
 	for i in "${arr[@]}"
 	do
 		DST=`echo $i | cut -d " " -f1`
-		echo $DST
 		options2[$counter]=$DST
 		counter=$((counter+1))
 	done
@@ -291,7 +287,6 @@ pull()
 	for i in "${arr[@]}"
 	do
 		DST=`echo $i | cut -d " " -f1`
-		echo $DST
 		options2[$counter]=$DST
 		counter=$((counter+1))
 	done
@@ -338,7 +333,7 @@ ps3()
 
 ps3
 
-options=("Show Status" "Commit and Push" "Auto Commit and Push" "Push" "Pull" "List Branches" "Checkout Branch" "Merge Branch" "Delete Branch" "Merge and Deploy" "Show Remotes" "Log" "About" "Quit")
+options=("Show Status" "Commit and Push" "Auto Commit and Push" "Push" "Pull" "List Branches" "Checkout Branch" "Merge Working Branch" "Merge Destination Branch" "Delete Branch" "Merge and Deploy" "Show Remotes" "Log" "About" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -370,8 +365,12 @@ do
 			checkout
 			ps3
             ;;
-        "Merge Branch")
-			merge
+        "Merge Working Branch")
+			merge_working_branch
+			ps3
+            ;;
+        "Merge Destination Branch")
+			merge_destination_branch
 			ps3
             ;;
         "Delete Branch")

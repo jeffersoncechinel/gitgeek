@@ -4,15 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-<<<<<<< HEAD
-<<<<<<< HEAD
-# @Last Modified time: 2015-08-31 20:52:39
-=======
-# @Last Modified time: 2015-08-31 20:43:46
->>>>>>> develop
-=======
 # @Last Modified time: 2015-08-31 21:03:54
->>>>>>> develop
 #
 # ------------------------------------------------------------------
 
@@ -193,11 +185,7 @@ merge_destination_branch()
 
 	if [ "$BRANCH" == "master" ];then
 		echo "It is not good practice to merge 'master' into another branch."
-<<<<<<< HEAD
-		echo "Use: 'Merge Working Branch' instead"
-=======
 		echo "Consider using 'Merge Working Branch' instead."
->>>>>>> develop
 		echo "Aborting..."
 		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
@@ -234,20 +222,7 @@ merge_destination_branch()
 		git checkout $BRANCH
 		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
-<<<<<<< HEAD
-	fi
-
-	echo "Checking out $bname: "
-	echo -e "$COL_MAGENTA git checkout $bname $COL_RESET"
-	git checkout $bname
-	echo "Merging $BRANCH into $bname"
-	echo -e "$COL_MAGENTA git merge $BRANCH $COL_RESET"
-	git merge $BRANCH
-	git checkout $BRANCH
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
-=======
 	done
->>>>>>> develop
 }
 
 merge_working_branch()

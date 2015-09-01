@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 22:02:27
+# @Last Modified time: 2015-08-31 22:09:49
 #
 # ------------------------------------------------------------------
 
@@ -125,13 +125,13 @@ merge_deploy()
 	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 
 	if [ "$BRANCH" == "master" ];then
-		echo -e "You cannot merge current branch $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET"
+		echo -e "You cannot merge current branch ($COL_GREEN $BRANCH $COL_RESET) into ($COL_YELLOW master $COL_RESET)"
 		return
 	fi
 
-	echo -e "You are about to merge the current branch $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET."
-	read -p "Do you really want to merge?" yn
-	if [ "$yn" == "n" ];then
+	echo -e "You are about to merge the current branch ($COL_GREEN $BRANCH $COL_RESET) into ($COL_YELLOW master $COL_RESET)."
+	read -p "Do you really want to merge? (y/n): " yn
+	if [ "$yn" != "y" ];then
 		echo "Aborting..."
 		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
@@ -139,24 +139,23 @@ merge_deploy()
 	echo "Checking out master.."
 	echo -e "$COL_MAGENTA git checkout master $COL_RESET"
 	git checkout master
-	echo "Merging $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET."
+	echo  -e "Merging $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET."
 	echo -e "$COL_MAGENTA git merge $BRANCH $COL_RESET"
 	git merge $BRANCH
-	echo "Pushing to remotes..."
+	echo "Pushing to remote master"
 	IFS=$'\n'
 	arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
 	unset IFS
 
-	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 	for i in "${arr[@]}"
 	do
 		DST=`echo $i | cut -d " " -f1`
 
-		read -p "Push to $DST? (y/n):" yn
-		if [ "$yn" == "y" ]; then
+		#read -p "Push to $DST? (y/n):" yn
+		#if [ "$yn" == "y" ]; then
 			echo -e "$COL_MAGENTA git push $DST $BRANCH $COL_RESET"
 			git push $DST $BRANCH
-		fi
+		#fi
 
 	done
 	echo -e "$COL_MAGENTA git checkout $BRANCH $COL_RESET"

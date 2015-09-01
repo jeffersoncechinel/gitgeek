@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 21:49:19
+# @Last Modified time: 2015-08-31 21:55:02
 #
 # ------------------------------------------------------------------
 
@@ -374,8 +374,8 @@ echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 log()
 {
 	echo "Showing last 10 commits.."
-	echo -e "$COL_MAGENTA  git log -n 15  --pretty=oneline $COL_RESET"
-	git log -n 10  --pretty=oneline
+	echo -e "$COL_MAGENTA git log --graph --decorate --pretty=oneline --abbrev-commit --all $COL_RESET"
+	git log --graph --decorate --pretty=oneline --abbrev-commit --all
 	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 

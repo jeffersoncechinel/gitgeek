@@ -4,9 +4,15 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 22:09:49
+# @Last Modified time: 2015-08-31 22:17:50
 #
 # ------------------------------------------------------------------
+
+#
+# GIT Helper (ghelper.sh) - v0.1
+# This is a simple bash script utility to speed up the development worflow
+# by fastening the use of git application in a very fashion prompt menus.
+#
 
 # Colors
 ESC_SEQ="\x1b["

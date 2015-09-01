@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 22:26:54
+# @Last Modified time: 2015-08-31 22:35:12
 #
 # ------------------------------------------------------------------
 
@@ -13,6 +13,10 @@
 # This is a simple bash script utility to speed up the development worflow
 # by fastening the use of git application in a very fashion prompt menus.
 #
+
+
+#Stop git from converting end lines LF(unix) to CRLF(windows).
+git config core.autocrlf false
 
 # Colors
 ESC_SEQ="\x1b["
@@ -25,6 +29,7 @@ COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 
 clear
+
 echo ""
 echo  -e $COL_YELLOW"GIT Console Helper - Verson 0.1 (Jefferson Cechinel)"$COL_RESET
 echo ""

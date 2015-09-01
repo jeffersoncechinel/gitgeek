@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 22:24:13
+# @Last Modified time: 2015-08-31 22:26:54
 #
 # ------------------------------------------------------------------
 
@@ -159,7 +159,7 @@ merge_deploy()
 
 		#read -p "Push to $DST? (y/n):" yn
 		#if [ "$yn" == "y" ]; then
-			echo -e "$COL_MAGENTA git push $DST $BRANCH $COL_RESET"
+			echo -e "$COL_MAGENTA git push $DST master $COL_RESET"
 			git push $DST master
 		#fi
 

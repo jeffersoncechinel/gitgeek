@@ -5,9 +5,13 @@
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
 <<<<<<< HEAD
+<<<<<<< HEAD
 # @Last Modified time: 2015-08-31 20:52:39
 =======
 # @Last Modified time: 2015-08-31 20:43:46
+>>>>>>> develop
+=======
+# @Last Modified time: 2015-08-31 21:03:54
 >>>>>>> develop
 #
 # ------------------------------------------------------------------
@@ -189,7 +193,11 @@ merge_destination_branch()
 
 	if [ "$BRANCH" == "master" ];then
 		echo "It is not good practice to merge 'master' into another branch."
+<<<<<<< HEAD
 		echo "Use: 'Merge Working Branch' instead"
+=======
+		echo "Consider using 'Merge Working Branch' instead."
+>>>>>>> develop
 		echo "Aborting..."
 		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 		return
@@ -240,6 +248,43 @@ merge_destination_branch()
 =======
 	done
 >>>>>>> develop
+}
+
+merge_working_branch()
+{
+	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
+	IFS=$'\n'
+	arr=($(git branch | grep -v "*" | grep -v "grep" | cut -d '*' -f2 | xargs))
+	unset IFS
+	PS3=`echo -e $COL_YELLOW"Choose a branch ($COL_MAGENTA merge $COL_RESET): "$COL_RESET`
+	counter=0
+	for i in "${arr[@]}"
+	do
+		DST=`echo $i`
+		options2[$counter]=$DST
+		counter=$((counter+1))
+	done
+	options2[$counter]="Back to main menu"
+
+	select opt2 in "${options2[@]}"
+	do
+		if [ "$opt2" == "Back to main menu" ]; then
+			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+			return
+		fi
+		echo -e "You are about to merge the contents of ($COL_GREEN $opt2 $COL_RESET) into ($COL_GREEN $BRANCH $COL_RESET)"
+		read -p "Do you want to proceed? (y/n)" yn
+		if [ "$yn" != "y" ]; then
+			echo "Aborting..."
+			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+			return
+		fi
+		echo "Merging $opt2 into $BRANCH"
+		echo -e "$COL_MAGENTA git merge $opt2 $COL_RESET"
+		git merge $opt2
+		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+		return
+	done
 }
 
 delete_branch()

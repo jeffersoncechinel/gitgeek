@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 21:03:54
+# @Last Modified time: 2015-08-31 21:49:19
 #
 # ------------------------------------------------------------------
 
@@ -166,16 +166,30 @@ merge_deploy()
 
 checkout()
 {
-	echo -e "$COL_MAGENTA git branch $BRANCH $COL_RESET"
-	git branch
-	read -p "Branch name to checkout: " bcheckout
-	if [ -z "$bcheckout" ]; then
-		echo "Aborting..."
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+	BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
+	IFS=$'\n'
+	arr=($(git branch | grep -v "*" | grep -v "grep" | cut -d '*' -f2 | xargs))
+	unset IFS
+	PS3=`echo -e $COL_YELLOW"Choose a branch ($COL_MAGENTA checkout $COL_RESET): "$COL_RESET`
+	counter=0
+	for i in "${arr[@]}"
+	do
+		DST=`echo $i`
+		options2[$counter]=$DST
+		counter=$((counter+1))
+	done
+	options2[$counter]="Back to main menu"
+
+	select opt2 in "${options2[@]}"
+	do
+		if [ "$opt2" == "Back to main menu" ]; then
+			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+			return
+		fi
+		echo -e "$COL_MAGENTA git checkout $opt2 $COL_RESET"
+		git checkout $opt2
 		return
-	fi
-	echo -e "$COL_MAGENTA git checkout $bcheckout $COL_RESET"
-	git checkout $bcheckout
+	done
 	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }
 

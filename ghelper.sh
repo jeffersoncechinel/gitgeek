@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-08-31 22:35:12
+# @Last Modified time: 2015-09-14 21:00:20
 #
 # ------------------------------------------------------------------
 
@@ -369,7 +369,7 @@ pull()
 			return
 		fi
 		echo -e "$COL_MAGENTA git pull $opt2 $BRANCH $COL_RESET"
-		git push $opt2 $BRANCH
+		git pull $opt2 $BRANCH
 	done
 	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
 }

@@ -9,8 +9,8 @@
 # ------------------------------------------------------------------
 
 #
-# GIT Helper (gitgeek) - v0.1
-# This is a simple bash script utility to speed up the development worflow
+# GitGeek (gitgeek) - v0.1
+# This is a simple bash script utility that speeds up the development workflow
 # by fastening the use of git application in a very fashion prompt menus.
 #
 

@@ -4,7 +4,7 @@
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
 # @Last Modified by:   jefferson
-# @Last Modified time: 2015-09-14 21:00:20
+# @Last Modified time: 2015-09-14 21:22:45
 #
 # ------------------------------------------------------------------
 
@@ -60,13 +60,24 @@ if [ -z "$EMAIL" ]; then
 	echo ""
 fi
 
-
 commit()
 {
 	read -p "Type the commit message:" msg
-    echo -n "Deleting caching files if any... "
-    rm -rf data/log/* data/cache/*.php app/log*
-    echo "OK"
+    echo "Adding all files.."
+    echo -e "$COL_MAGENTA git add . $COL_RESET"
+	git add .
+	echo "Checking git status.."
+	echo -e "$COL_MAGENTA git status $COL_RESET"
+	git status
+	echo "Commiting with message: $msg"
+	echo -e "$COL_MAGENTA git commit -a -m "$msg" $COL_RESET"
+	git commit -a -m "$msg"
+	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."
+}
+
+commitpush()
+{
+	read -p "Type the commit message:" msg
     echo "Adding all files.."
     echo -e "$COL_MAGENTA git add . $COL_RESET"
 	git add .
@@ -405,12 +416,13 @@ about()
 ps3()
 {
 	CUR_BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
-	PS3=`echo -e $COL_BLUE"Please enter your choice "$COL_RESET"($COL_GREEN $CUR_BRANCH $COL_RESET): "`
+	PWD=`basename "$PWD"`
+	PS3=`echo -e "Project ($COL_BLUE $PWD $COL_RESET) Branch ($COL_GREEN $CUR_BRANCH $COL_RESET): "`
 }
 
 ps3
 
-options=("Show Status" "Commit and Push" "Auto Commit and Push" "Push" "Pull" "List Branches" "Checkout Branch" "Merge Working Branch" "Merge Destination Branch" "Delete Branch" "Merge and Deploy" "Show Remotes" "Log" "About" "Quit")
+options=("Show Status" "Commit" "Commit and Push" "Auto Commit and Push" "Push" "Pull" "List Branches" "Checkout Branch" "Merge Working Branch" "Merge Destination Branch" "Delete Branch" "Merge and Deploy" "Show Remotes" "Log" "About" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -418,8 +430,12 @@ do
     	    status
     	    ps3
     	    ;;
-        "Commit and Push")
+    	"Commit")
             commit
+            ps3
+            ;;
+        "Commit and Push")
+            commitpush
             ps3
             ;;
         "Auto Commit and Push")
@@ -474,6 +490,6 @@ do
 			#break
 			exit
             ;;
-        *) echo invalid option;;
+        *) clear; echo "Invalid Option! - Press enter to see command list.";;
     esac
 done

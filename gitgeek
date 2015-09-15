@@ -423,7 +423,9 @@ about()
 	echo " \____|_|\__|\____|\___|\___|_|\_\\"
 	echo ""
 	echo "Git Geek - A simple bash script utility to speed up the repetitive daily git commands."
-	echo ""
+	echo "Author: Jefferson Cechinel"
+	echo "E-mail: jefferson@homeyou.com"
+	echo "Project Website: https://github.com/jeffersoncechinel/dev-scripts.git"
 	echo ""
 }
 

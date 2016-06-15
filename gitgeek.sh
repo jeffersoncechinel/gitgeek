@@ -3,11 +3,7 @@
 # @Author: Jefferson Cechinel
 # @Email: jefferson@homeyou.com
 # @Date:   2015-08-30 16:26:28
-# @Last Modified by:   jefferson
-# @Last Modified time: 2015-09-14 21:30:20
-#
 # ------------------------------------------------------------------
-
 #
 # GitGeek (gitgeek) - v0.1
 # This is a simple bash script utility that speeds up the repetitive tasks

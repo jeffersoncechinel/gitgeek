@@ -6,7 +6,7 @@ GitGeek is a simple Linux bash script utility that speeds up the repetitive git 
  git clone https://github.com/jeffersoncechinel/gitgeek.git
  ```
  
-2. Copy gitgeek.sh to your system PATH (example: cp gitgeek.sh /usr/local/bin/gitgeek)
+2. Copy gitgeek.sh to your system PATH
 ```
  cd gitgeek
  cp gitgeek.sh /usr/local/bin/gitgeek

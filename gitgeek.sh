@@ -10,9 +10,13 @@
 
 #
 # GitGeek (gitgeek) - v0.1
-# This is a simple bash script utility that speeds up the development workflow
-# by fastening the use of git application in a very fashion prompt menus.
+# This is a simple bash script utility that speeds up the repetitive tasks
+# by automating in a few strokes the use of git application in a very fashion
+# prompt menu way.
 #
+
+# By default it will prompt you to configure the git project bt setting your real name and
+# e-mail address if it is not set yet.
 
 
 #Stop git from converting end lines LF(unix) to CRLF(windows).
@@ -78,7 +82,7 @@ commit()
 	echo "Commiting with message: $msg"
 	echo -e $COL_MAGENTA"git commit -a -m "$msg" $COL_RESET"
 	git commit -a -m "$msg"
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 commitpush()
@@ -93,7 +97,7 @@ commitpush()
 	echo "Commiting with message: $msg"
 	read -p "Perform git commit? (y/n):" yn
 	if [ "$yn" != "y" ]; then
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+		refresh
 		return
 	fi
 	echo -e $COL_MAGENTA"git commit -a -m "$msg" $COL_RESET"
@@ -115,7 +119,7 @@ commitpush()
 			git push $DST $BRANCH
 		fi
 	done
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 autocommit()
@@ -145,7 +149,7 @@ autocommit()
 		echo -e $COL_MAGENTA"git push $DST $BRANCH $COL_RESET"
 		git push $DST $BRANCH
 	done
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 merge_deploy()
@@ -161,7 +165,7 @@ merge_deploy()
 	read -p "Do you really want to merge? (y/n): " yn
 	if [ "$yn" != "y" ];then
 		echo "Aborting..."
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+		refresh
 		return
 	fi
 	echo "Checking out master.."
@@ -178,17 +182,16 @@ merge_deploy()
 	for i in "${arr[@]}"
 	do
 		DST=`echo $i | cut -d " " -f1`
-
-		#read -p "Push to $DST? (y/n):" yn
-		#if [ "$yn" == "y" ]; then
+		read -p "Push to master? (y/n):" yn
+		if [ "$yn" == "y" ]; then
 			echo -e $COL_MAGENTA"git push $DST master $COL_RESET"
 			git push $DST master
-		#fi
+		fi
 
 	done
 	echo -e $COL_MAGENTA"git checkout $BRANCH $COL_RESET"
 	git checkout $BRANCH
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 checkout()
@@ -210,14 +213,14 @@ checkout()
 	select opt2 in "${options2[@]}"
 	do
 		if [ "$opt2" == "Back to main menu" ]; then
-			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+			refresh
 			return
 		fi
 		echo -e $COL_MAGENTA"git checkout $opt2 $COL_RESET"
 		git checkout $opt2
 		return
 	done
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 merge_destination_branch()
@@ -228,7 +231,7 @@ merge_destination_branch()
 		echo "It is not good practice to merge 'master' into another branch."
 		echo "Consider using 'Merge Working Branch' instead."
 		echo "Aborting..."
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+		refresh
 		return
 	fi
 	echo -e "You are about to merge the contents of ($COL_GREEN $BRANCH $COL_RESET) into another branch"
@@ -248,7 +251,7 @@ merge_destination_branch()
 	select opt2 in "${options2[@]}"
 	do
 		if [ "$opt2" == "Back to main menu" ]; then
-			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+			refresh
 			return
 		fi
 		echo -e $COL_MAGENTA"git merge $opt2 $COL_RESET"
@@ -261,7 +264,7 @@ merge_destination_branch()
 		git merge $BRANCH
 		echo -e $COL_MAGENTA"git checkout $BRANCH $COL_RESET"
 		git checkout $BRANCH
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+		refresh
 		return
 	done
 }
@@ -285,20 +288,20 @@ merge_working_branch()
 	select opt2 in "${options2[@]}"
 	do
 		if [ "$opt2" == "Back to main menu" ]; then
-			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+			refresh
 			return
 		fi
 		echo -e "You are about to merge the contents of ($COL_GREEN $opt2 $COL_RESET) into ($COL_GREEN $BRANCH $COL_RESET)"
 		read -p "Do you want to proceed? (y/n)" yn
 		if [ "$yn" != "y" ]; then
 			echo "Aborting..."
-			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+			refresh
 			return
 		fi
 		echo "Merging $opt2 into $BRANCH"
 		echo -e $COL_MAGENTA"git merge $opt2 $COL_RESET"
 		git merge $opt2
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+		refresh
 		return
 	done
 }
@@ -317,22 +320,22 @@ delete_branch()
 	if [ "$bname" == "master" ];then
 		echo "You cannot delete the branch $COL_GREEN($bname)$COL_REST using this tool."
 		echo "Aborting..."
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+		refresh
 		return
 	fi
 	if [ "$bname" == "develop" ];then
 		echo "You cannot delete the branch ($bname) using this tool."
 		echo "Aborting..."
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+		refresh
 		return
 	fi
 	if [ "$bname" == "" ];then
-		echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+		refresh
 		return
 	fi
 	echo -e $COL_MAGENTA"git branch -d $bname $COL_RESET"
 	git branch -d $bname
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 push()
@@ -354,13 +357,13 @@ push()
 	select opt2 in "${options2[@]}"
 	do
 		if [ "$opt2" == "Back to main menu" ]; then
-			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+			refresh
 			return
 		fi
 		echo -e $COL_MAGENTA"git push $opt2 $BRANCH $COL_RESET"
 		git push $opt2 $BRANCH
 	done
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 pull()
@@ -382,21 +385,21 @@ pull()
 	select opt2 in "${options2[@]}"
 	do
 		if [ "$opt2" == "Back to main menu" ]; then
-			echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+			refresh
 			return
 		fi
 		echo -e $COL_MAGENTA"git pull $opt2 $BRANCH $COL_RESET"
 		git pull $opt2 $BRANCH
 		return
 	done
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 status()
 {
 echo -e $COL_MAGENTA"git status $COL_RESET"
 git status
-echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+refresh
 }
 
 log()
@@ -404,14 +407,14 @@ log()
 	echo "Showing last 10 commits.."
 	echo -e $COL_MAGENTA"git log --graph --decorate --pretty=oneline --abbrev-commit --all $COL_RESET"
 	git log --graph --decorate --pretty=oneline --abbrev-commit --all
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 list_branch()
 {
 	echo -e $COL_MAGENTA"git branch --all $COL_RESET"
 	git branch
-	echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+	refresh
 }
 
 about()
@@ -429,6 +432,10 @@ about()
 	echo ""
 }
 
+refresh()
+{
+    refresh
+}
 
 ps3()
 {

@@ -16,6 +16,18 @@
 
 
 #Stop git from converting end lines LF(unix) to CRLF(windows).
+
+if [ "$(uname)" == "Darwin" ]; then
+    # Do something under Mac OS X platform
+    OPTION=""
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    # Do something under GNU/Linux platform
+    OPTION="-e"
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+    # Do something under Windows NT platform
+   OPTION="-e"
+fi
+
 git config core.autocrlf false
 
 # Colors
@@ -37,7 +49,7 @@ echo "| |  _| | __| |  _ / _ \/ _ \ |/ /"
 echo "| |_| | | |_| |_| |  __/  __/   < "
 echo " \____|_|\__|\____|\___|\___|_|\_\\"
 echo ""
-echo  -e $COL_YELLOW"GIT Geek - Verson 0.1 (Jefferson Cechinel)"$COL_RESET
+echo  $OPTION $COL_YELLOW"GIT Geek - Verson 0.1 (Jefferson Cechinel)"$COL_RESET
 echo ""
 BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 
@@ -46,7 +58,7 @@ BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 # 	exit
 # fi
 
-echo -e "You are working in branch: $COL_GREEN $BRANCH $COL_RESET"
+echo $OPTION "You are working in branch: $COL_GREEN $BRANCH $COL_RESET"
 echo "List of branches in this repository:"
 git branch
 echo ""
@@ -70,13 +82,13 @@ commit()
 {
     read -p "Type the commit message:" msg
     echo "Adding all files.."
-    echo -e $COL_MAGENTA"git add . $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git add . $COL_RESET"
     git add .
     echo "Checking git status.."
-    echo -e $COL_MAGENTA"git status $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git status $COL_RESET"
     git status
     echo "Commiting with message: $msg"
-    echo -e $COL_MAGENTA"git commit -a -m "$msg" $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git commit -a -m "$msg" $COL_RESET"
     git commit -a -m "$msg"
     refresh
 }
@@ -85,10 +97,10 @@ commitpush()
 {
     read -p "Type the commit message:" msg
     echo "Adding all files.."
-    echo -e $COL_MAGENTA"git add . $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git add . $COL_RESET"
     git add .
     echo "Checking git status.."
-    echo -e $COL_MAGENTA"git status $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git status $COL_RESET"
     git status
     echo "Commiting with message: $msg"
     read -p "Perform git commit? (y/n):" yn
@@ -96,7 +108,7 @@ commitpush()
         refresh
         return
     fi
-    echo -e $COL_MAGENTA"git commit -a -m "$msg" $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git commit -a -m "$msg" $COL_RESET"
     git commit -a -m "$msg"
 
     echo "Pushing to remotes..."
@@ -111,7 +123,7 @@ commitpush()
 
         read -p "Push to $DST? (y/n):" yn
         if [ "$yn" == "y" ]; then
-            echo -e $COL_MAGENTA"git push $DST $BRANCH $COL_RESET"
+            echo $OPTION $COL_MAGENTA"git push $DST $BRANCH $COL_RESET"
             git push $DST $BRANCH
         fi
     done
@@ -125,13 +137,13 @@ autocommit()
     rm -rf data/log/* data/cache/*.php
     echo "OK"
     echo "Adding all files.."
-    echo -e $COL_MAGENTA"git add . $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git add . $COL_RESET"
     git add .
     echo "Checking git status.."
-    echo -e $COL_MAGENTA"git status $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git status $COL_RESET"
     git status
     echo "Commiting with message: $msg"
-    echo -e $COL_MAGENTA"git commit -a -m $msg $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git commit -a -m $msg $COL_RESET"
     git commit -a -m "$msg"
     echo "Pushing to all remotes..."
     IFS=$'\n'
@@ -142,7 +154,7 @@ autocommit()
     for i in "${arr[@]}"
     do
         DST=`echo $i | cut -d " " -f1`
-        echo -e $COL_MAGENTA"git push $DST $BRANCH $COL_RESET"
+        echo $OPTION $COL_MAGENTA"git push $DST $BRANCH $COL_RESET"
         git push $DST $BRANCH
     done
     refresh
@@ -153,11 +165,11 @@ merge_deploy()
     BRANCH=`git branch | grep "*" | grep -v "grep" | cut -d '*' -f2 | xargs`
 
     if [ "$BRANCH" == "master" ];then
-        echo -e "You cannot merge current branch ($COL_GREEN $BRANCH $COL_RESET) into ($COL_YELLOW master $COL_RESET)"
+        echo $OPTION "You cannot merge current branch ($COL_GREEN $BRANCH $COL_RESET) into ($COL_YELLOW master $COL_RESET)"
         return
     fi
 
-    echo -e "You are about to merge the current branch ($COL_GREEN $BRANCH $COL_RESET) into ($COL_YELLOW master $COL_RESET)."
+    echo $OPTION "You are about to merge the current branch ($COL_GREEN $BRANCH $COL_RESET) into ($COL_YELLOW master $COL_RESET)."
     read -p "Do you really want to merge? (y/n): " yn
     if [ "$yn" != "y" ];then
         echo "Aborting..."
@@ -165,10 +177,10 @@ merge_deploy()
         return
     fi
     echo "Checking out master.."
-    echo -e $COL_MAGENTA"git checkout master $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git checkout master $COL_RESET"
     git checkout master
-    echo  -e "Merging $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET."
-    echo -e $COL_MAGENTA"git merge $BRANCH $COL_RESET"
+    echo  $OPTION "Merging $COL_GREEN $BRANCH $COL_RESET into $COL_YELLOW master $COL_RESET."
+    echo $OPTION $COL_MAGENTA"git merge $BRANCH $COL_RESET"
     git merge $BRANCH
     echo "Pushing to remote master"
     IFS=$'\n'
@@ -180,12 +192,12 @@ merge_deploy()
         DST=`echo $i | cut -d " " -f1`
         read -p "Push to master? (y/n):" yn
         if [ "$yn" == "y" ]; then
-            echo -e $COL_MAGENTA"git push $DST master $COL_RESET"
+            echo $OPTION $COL_MAGENTA"git push $DST master $COL_RESET"
             git push $DST master
         fi
 
     done
-    echo -e $COL_MAGENTA"git checkout $BRANCH $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git checkout $BRANCH $COL_RESET"
     git checkout $BRANCH
     refresh
 }
@@ -196,7 +208,7 @@ checkout()
     IFS=$'\n'
     arr=($(git branch | grep -v "*" | grep -v "grep" | cut -d '*' -f2 | xargs))
     unset IFS
-    PS3=`echo -e $COL_YELLOW"Choose a branch ($COL_MAGENTA checkout $COL_RESET): "$COL_RESET`
+    PS3=`echo $OPTION $COL_YELLOW"Choose a branch ($COL_MAGENTA checkout $COL_RESET): "$COL_RESET`
     counter=0
     for i in "${arr[@]}"
     do
@@ -212,7 +224,7 @@ checkout()
             refresh
             return
         fi
-        echo -e $COL_MAGENTA"git checkout $opt2 $COL_RESET"
+        echo $OPTION $COL_MAGENTA"git checkout $opt2 $COL_RESET"
         git checkout $opt2
         return
     done
@@ -230,11 +242,11 @@ merge_destination_branch()
         refresh
         return
     fi
-    echo -e "You are about to merge the contents of ($COL_GREEN $BRANCH $COL_RESET) into another branch"
+    echo $OPTION "You are about to merge the contents of ($COL_GREEN $BRANCH $COL_RESET) into another branch"
     IFS=$'\n'
     arr=($(git branch | grep -v "*" | grep -v "grep" | cut -d '*' -f2 | xargs))
     unset IFS
-    PS3=`echo -e $COL_YELLOW"Choose a destination branch ($COL_MAGENTA merge $COL_RESET): "$COL_RESET`
+    PS3=`echo $OPTION $COL_YELLOW"Choose a destination branch ($COL_MAGENTA merge $COL_RESET): "$COL_RESET`
     counter=0
     for i in "${arr[@]}"
     do
@@ -250,15 +262,15 @@ merge_destination_branch()
             refresh
             return
         fi
-        echo -e $COL_MAGENTA"git merge $opt2 $COL_RESET"
+        echo $OPTION $COL_MAGENTA"git merge $opt2 $COL_RESET"
         #echo git merge $opt2
         echo "Checking out $opt2: "
-        echo -e $COL_MAGENTA"git checkout $opt2 $COL_RESET"
+        echo $OPTION $COL_MAGENTA"git checkout $opt2 $COL_RESET"
         git checkout $opt2
         echo "Merging $BRANCH into $opt2"
-        echo -e $COL_MAGENTA"git merge $BRANCH $COL_RESET"
+        echo $OPTION $COL_MAGENTA"git merge $BRANCH $COL_RESET"
         git merge $BRANCH
-        echo -e $COL_MAGENTA"git checkout $BRANCH $COL_RESET"
+        echo $OPTION $COL_MAGENTA"git checkout $BRANCH $COL_RESET"
         git checkout $BRANCH
         refresh
         return
@@ -271,7 +283,7 @@ merge_working_branch()
     IFS=$'\n'
     arr=($(git branch | grep -v "*" | grep -v "grep" | cut -d '*' -f2 | xargs))
     unset IFS
-    PS3=`echo -e $COL_YELLOW"Choose a branch ($COL_MAGENTA merge $COL_RESET): "$COL_RESET`
+    PS3=`echo $OPTION $COL_YELLOW"Choose a branch ($COL_MAGENTA merge $COL_RESET): "$COL_RESET`
     counter=0
     for i in "${arr[@]}"
     do
@@ -287,7 +299,7 @@ merge_working_branch()
             refresh
             return
         fi
-        echo -e "You are about to merge the contents of ($COL_GREEN $opt2 $COL_RESET) into ($COL_GREEN $BRANCH $COL_RESET)"
+        echo $OPTION "You are about to merge the contents of ($COL_GREEN $opt2 $COL_RESET) into ($COL_GREEN $BRANCH $COL_RESET)"
         read -p "Do you want to proceed? (y/n)" yn
         if [ "$yn" != "y" ]; then
             echo "Aborting..."
@@ -295,7 +307,7 @@ merge_working_branch()
             return
         fi
         echo "Merging $opt2 into $BRANCH"
-        echo -e $COL_MAGENTA"git merge $opt2 $COL_RESET"
+        echo $OPTION $COL_MAGENTA"git merge $opt2 $COL_RESET"
         git merge $opt2
         refresh
         return
@@ -329,7 +341,7 @@ delete_branch()
         refresh
         return
     fi
-    echo -e $COL_MAGENTA"git branch -d $bname $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git branch -d $bname $COL_RESET"
     git branch -d $bname
     refresh
 }
@@ -340,7 +352,7 @@ push()
     IFS=$'\n'
     arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
     unset IFS
-    PS3=`echo -e $COL_BLUE"Choose the remote repository ($COL_MAGENTA push $COL_RESET): "$COL_RESET`
+    PS3=`echo $OPTION $COL_BLUE"Choose the remote repository ($COL_MAGENTA push $COL_RESET): "$COL_RESET`
     counter=0
     for i in "${arr[@]}"
     do
@@ -356,7 +368,7 @@ push()
             refresh
             return
         fi
-        echo -e $COL_MAGENTA"git push $opt2 $BRANCH $COL_RESET"
+        echo $OPTION $COL_MAGENTA"git push $opt2 $BRANCH $COL_RESET"
         git push $opt2 $BRANCH
     done
     refresh
@@ -368,7 +380,7 @@ pull()
     IFS=$'\n'
     arr=($(git remote -v |grep "(push)"| sed 's/:.*//'))
     unset IFS
-    PS3=`echo -e $COL_BLUE"Choose the remote repository ($COL_MAGENTA pull $COL_RESET): "$COL_RESET`
+    PS3=`echo $OPTION $COL_BLUE"Choose the remote repository ($COL_MAGENTA pull $COL_RESET): "$COL_RESET`
     counter=0
     for i in "${arr[@]}"
     do
@@ -384,7 +396,7 @@ pull()
             refresh
             return
         fi
-        echo -e $COL_MAGENTA"git pull $opt2 $BRANCH $COL_RESET"
+        echo $OPTION $COL_MAGENTA"git pull $opt2 $BRANCH $COL_RESET"
         git pull $opt2 $BRANCH
         return
     done
@@ -393,7 +405,7 @@ pull()
 
 status()
 {
-echo -e $COL_MAGENTA"git status $COL_RESET"
+echo $OPTION $COL_MAGENTA"git status $COL_RESET"
 git status
 refresh
 }
@@ -401,14 +413,14 @@ refresh
 log()
 {
     echo "Showing last 10 commits.."
-    echo -e $COL_MAGENTA"git log --graph --decorate --pretty=oneline --abbrev-commit --all $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git log --graph --decorate --pretty=oneline --abbrev-commit --all $COL_RESET"
     git log --graph --decorate --pretty=oneline --abbrev-commit --all
     refresh
 }
 
 list_branch()
 {
-    echo -e $COL_MAGENTA"git branch --all $COL_RESET"
+    echo $OPTION $COL_MAGENTA"git branch --all $COL_RESET"
     git branch
     refresh
 }
@@ -430,7 +442,7 @@ about()
 
 refresh()
 {
-    echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
+    echo $OPTION $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
 }
 
 ps3()

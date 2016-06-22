@@ -430,7 +430,7 @@ about()
 
 refresh()
 {
-    refresh
+    echo -e $COL_CYAN"Leave it blank and PRESS ENTER to refresh the command list."$COL_RESET
 }
 
 ps3()

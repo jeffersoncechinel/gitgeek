@@ -15,4 +15,8 @@ Copy gitgeek.sh to your system PATH
  cd gitgeek
  cp gitgeek.sh /usr/local/bin/gitgeek
  ```
- 
+ License
+----
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+

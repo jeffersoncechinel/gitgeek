@@ -1,5 +1,8 @@
 # GitGeek
 GitGeek is a simple Linux bash script utility that speeds up the repetitive git tasks I often face in development process. It provides the use of the most used git commands in a very fashion prompt menu way.
+
+![Data Flow](screenshot.png "GitGeek")
+
 ## Installation
 
 Clone this repository
